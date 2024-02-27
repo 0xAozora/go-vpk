@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-type entryReader struct {
-	fs FileReader
+type EntryReader struct {
+	fs io.ReaderAt
 
 	closed bool
 
@@ -15,7 +15,7 @@ type entryReader struct {
 	position int64
 }
 
-func (e *entryReader) Read(p []byte) (int, error) {
+func (e *EntryReader) Read(p []byte) (int, error) {
 	if e.closed {
 		return 0, os.ErrClosed
 	}
@@ -35,7 +35,7 @@ func (e *entryReader) Read(p []byte) (int, error) {
 	return n, err
 }
 
-func (e *entryReader) ReadAt(p []byte, off int64) (int, error) {
+func (e *EntryReader) ReadAt(p []byte, off int64) (int, error) {
 	if e.closed {
 		return 0, os.ErrClosed
 	}
@@ -54,7 +54,7 @@ func (e *entryReader) ReadAt(p []byte, off int64) (int, error) {
 	return n, err
 }
 
-func (e *entryReader) Seek(offset int64, whence int) (int64, error) {
+func (e *EntryReader) Seek(offset int64, whence int) (int64, error) {
 	if e.closed {
 		return 0, os.ErrClosed
 	}
@@ -77,7 +77,7 @@ func (e *entryReader) Seek(offset int64, whence int) (int64, error) {
 	return e.position, nil
 }
 
-func (e *entryReader) Close() error {
+func (e *EntryReader) Close() error {
 	if e.closed {
 		return os.ErrClosed
 	}

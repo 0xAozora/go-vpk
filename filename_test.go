@@ -15,7 +15,7 @@ func TestFilenameInvalidUnix(t *testing.T) {
 	}
 
 	for _, b := range bad {
-		e := &entry{path: b[0], file: b[1], ext: b[2]}
+		e := &Entry{path: b[0], file: b[1], ext: b[2]}
 
 		if e.FilenameSafeUnix() {
 			t.Errorf("%q should not be a valid filename", e.Filename())
@@ -42,7 +42,7 @@ func TestFilenameInvalidWindows(t *testing.T) {
 	}
 
 	for _, b := range bad {
-		e := &entry{path: b[0], file: b[1], ext: b[2]}
+		e := &Entry{path: b[0], file: b[1], ext: b[2]}
 
 		if e.FilenameSafeWindows() {
 			t.Errorf("%q should not be a valid filename", e.Filename())
@@ -60,7 +60,7 @@ func TestFilenameValidUnix(t *testing.T) {
 	}
 
 	for _, b := range good {
-		e := &entry{path: b[0], file: b[1], ext: b[2]}
+		e := &Entry{path: b[0], file: b[1], ext: b[2]}
 
 		if !e.FilenameSafeUnix() {
 			t.Errorf("%q should be a valid filename", e.Filename())
@@ -77,7 +77,7 @@ func TestFilenameValidWindows(t *testing.T) {
 	}
 
 	for _, b := range good {
-		e := &entry{path: b[0], file: b[1], ext: b[2]}
+		e := &Entry{path: b[0], file: b[1], ext: b[2]}
 
 		if !e.FilenameSafeWindows() {
 			t.Errorf("%q should be a valid filename", e.Filename())

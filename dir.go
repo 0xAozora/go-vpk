@@ -11,7 +11,7 @@ var (
 )
 
 // Open a VPK file with multiple index files.
-func OpenDir(path string) (VPK, error) {
+func OpenDir(path string) (*VPK, error) {
 	find := reDirPath.FindString(path)
 	if find == "" {
 		return nil, ErrInvalidPath
@@ -26,8 +26,7 @@ func OpenDir(path string) (VPK, error) {
 		return nil, err
 	}
 
-	v2, ok := v.(*vpk)
-	if !ok {
+	if v == nil {
 		return nil, ErrInvalidVPKVersion
 	}
 
@@ -39,11 +38,11 @@ func OpenDir(path string) (VPK, error) {
 			if os.IsNotExist(err) {
 				break
 			}
-			defer v2.Close()
+			defer v.Close()
 			return nil, err
 		}
 
-		v2.indexes = append(v2.indexes, ifs)
+		v.indexes = append(v.indexes, ifs)
 	}
 
 	return v, nil

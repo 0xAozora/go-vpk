@@ -6,26 +6,26 @@ import (
 	"io"
 )
 
-func openVPK_v2(fs FileReader, buffer []byte) (*vpk, error) {
+func openVPK_v2(fs FileReader, buffer []byte) (*VPK, error) {
 	if _, err := fs.Read(buffer[:4*5]); err != nil {
 		return nil, err
 	}
 
-	v := &vpk{
+	v := &VPK{
 		stream:     fs,
 		version:    2,
 		headerSize: 4 * 7,
 
-		treeSize:              int32(binary.LittleEndian.Uint32(buffer[:4])),
-		fileDataSectionSize:   int32(binary.LittleEndian.Uint32(buffer[4:8])),
-		archiveMD5SectionSize: int32(binary.LittleEndian.Uint32(buffer[8:12])),
-		otherMD5SectionSize:   int32(binary.LittleEndian.Uint32(buffer[12:16])),
-		signatureSectionSize:  int32(binary.LittleEndian.Uint32(buffer[16:20])),
+		TreeSize:              int32(binary.LittleEndian.Uint32(buffer[:4])),
+		FileDataSectionSize:   int32(binary.LittleEndian.Uint32(buffer[4:8])),
+		ArchiveMD5SectionSize: int32(binary.LittleEndian.Uint32(buffer[8:12])),
+		OtherMD5SectionSize:   int32(binary.LittleEndian.Uint32(buffer[12:16])),
+		SignatureSectionSize:  int32(binary.LittleEndian.Uint32(buffer[16:20])),
 
-		pathMap: make(map[string]*entry),
+		PathMap: make(map[string]*Entry),
 	}
 
-	reader := bufio.NewReader(io.LimitReader(fs, int64(v.treeSize)))
+	reader := bufio.NewReader(io.LimitReader(fs, int64(v.TreeSize)))
 
 	if err := treeReader(v, reader, buffer, v.addFile); err != nil {
 		defer v.Close()

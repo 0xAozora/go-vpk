@@ -6,22 +6,22 @@ import (
 	"io"
 )
 
-func openVPK_v1(fs FileReader, buffer []byte) (*vpk, error) {
+func openVPK_v1(fs FileReader, buffer []byte) (*VPK, error) {
 	if _, err := fs.Read(buffer[:4]); err != nil {
 		return nil, err
 	}
 
-	v := &vpk{
+	v := &VPK{
 		stream:     fs,
 		version:    1,
 		headerSize: 4 * 3,
 
-		treeSize: int32(binary.LittleEndian.Uint32(buffer[:4])),
+		TreeSize: int32(binary.LittleEndian.Uint32(buffer[:4])),
 
-		pathMap: make(map[string]*entry),
+		PathMap: make(map[string]*Entry),
 	}
 
-	reader := bufio.NewReader(io.LimitReader(fs, int64(v.treeSize)))
+	reader := bufio.NewReader(io.LimitReader(fs, int64(v.TreeSize)))
 
 	if err := treeReader(v, reader, buffer, v.addFile); err != nil {
 		defer v.Close()

@@ -7,7 +7,7 @@ import (
 	"io"
 )
 
-func treeReader(v VPK, reader *bufio.Reader, buffer []byte, cb func(e *entry)) error {
+func treeReader(v *VPK, reader *bufio.Reader, buffer []byte, cb func(e *Entry)) error {
 	var (
 		ext, path, file []byte
 		err             error
@@ -44,19 +44,19 @@ func treeReader(v VPK, reader *bufio.Reader, buffer []byte, cb func(e *entry)) e
 					return err
 				}
 
-				entry := &entry{
+				entry := &Entry{
 					ext:  string(ext[:len(ext)-1]),
 					path: string(path[:len(path)-1]),
 					file: string(file[:len(file)-1]),
 
-					crc:          binary.LittleEndian.Uint32(buffer[:4]),
-					preloadBytes: binary.LittleEndian.Uint16(buffer[4:6]),
-					archiveIndex: binary.LittleEndian.Uint16(buffer[6:8]),
-					entryOffset:  binary.LittleEndian.Uint32(buffer[8:12]),
-					entryLength:  binary.LittleEndian.Uint32(buffer[12:16]),
+					CRC:          binary.LittleEndian.Uint32(buffer[:4]),
+					PreloadBytes: binary.LittleEndian.Uint16(buffer[4:6]),
+					ArchiveIndex: binary.LittleEndian.Uint16(buffer[6:8]),
+					EntryOffset:  binary.LittleEndian.Uint32(buffer[8:12]),
+					EntryLength:  binary.LittleEndian.Uint32(buffer[12:16]),
 				}
 
-				if entry.preloadBytes > 0 {
+				if entry.PreloadBytes > 0 {
 					return errors.New("preload bytes not implemented yet")
 				}
 

@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func OpenStream(fs FileReader) (VPK, error) {
+func OpenStream(fs FileReader) (*VPK, error) {
 	// Buffer to be reused for reading the file data
 	buffer := make([]byte, 64)
 
@@ -36,7 +36,7 @@ func OpenStream(fs FileReader) (VPK, error) {
 }
 
 // Opens a single VPK file.
-func OpenSingle(path string) (VPK, error) {
+func OpenSingle(path string) (*VPK, error) {
 	fs, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func OpenSingle(path string) (VPK, error) {
 }
 
 // Opens either a single VPK file or a VPK directory depending on the file name.
-func OpenAny(path string) (VPK, error) {
+func OpenAny(path string) (*VPK, error) {
 	if reDirPath.MatchString(path) {
 		return OpenDir(path)
 	}
